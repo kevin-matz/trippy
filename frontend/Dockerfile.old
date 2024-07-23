@@ -1,0 +1,28 @@
+# ChatGPT prompt: I have a react frontend but dont know how to dockerize it. Can you help me write the Dockerfile for it? Im using Vite and after running npm run build the prod files are in /dist.
+
+# Use a lighter version of Node as a parent image
+FROM node:lts-alpine
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json (if available)
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the app's source code
+COPY . .
+
+# Build the React app for production using Vite
+RUN npm run build
+
+# Set up a lightweight web server to serve the production build
+RUN npm install -g serve
+
+# Expose the port
+EXPOSE 20011
+
+# Set the command to serve the production build
+CMD ["serve", "-s", "dist", "-p", "20011"]

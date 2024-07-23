@@ -1,0 +1,21 @@
+{
+  "name": "ss_2023_wa_apwhy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "backend": "nodemon ./backend/src/app.js",
+    "frontend": "cd frontend && npm run dev",
+    "start": "concurrently \"npm run backend\" \"npm run frontend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.ai.fh-erfurt.de/ma4163sp1/wa/ss23/ss_2023_wa_apwhy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

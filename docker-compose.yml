@@ -1,0 +1,58 @@
+version: '3'
+services:
+  ss2023_wa_apwhy_backend:
+    image: ss2023_wa_apwhy_backend
+    container_name: ss2023_wa_apwhy_backend
+    networks:
+      - ss2023_wa_apwhy
+    build: ./backend
+    ports:
+      - "20013:20013"
+    environment:
+      - MONGODB_URL=mongodb://ss2023_wa_apwhy_mongodb:20012/trippy
+    depends_on:
+      - ss2023_wa_apwhy_mongodb
+
+  ss2023_wa_apwhy_mongodb:
+    image: mongo:4.4
+    container_name: ss2023_wa_apwhy_mongodb
+    networks:
+      - ss2023_wa_apwhy
+    command: mongod --port 20012
+    ports:
+      - "20012:20012"
+    environment:
+      - MONGO_INITDB_DATABASE=trippy
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+
+#  ss2023_wa_apwhy_mongo_express:
+#    image: mongo-express
+#    container_name: ss2023_wa_apwhy_mongo_express
+#    networks:
+#      - ss2023_wa_apwhy
+#    restart: always
+#    ports:
+#      - "8081:8081"
+#    environment:
+#      - ME_CONFIG_MONGODB_URL=mongodb://ss2023_wa_apwhy_mongodb:20012
+#    depends_on:
+#      - ss2023_wa_apwhy_mongodb
+
+  ss2023_wa_apwhy_frontend:
+    image: ss2023_wa_apwhy_frontend
+    container_name: ss2023_wa_apwhy_frontend
+    networks:
+      - ss2023_wa_apwhy
+    environment:
+      - VITE_PROXY_TARGET=http://ss2023_wa_apwhy_backend:20013
+    build: ./frontend
+    ports:
+      - "20011:20011"
+    depends_on:
+      - ss2023_wa_apwhy_mongodb
+      - ss2023_wa_apwhy_backend
+
+networks:
+  ss2023_wa_apwhy:
+    driver: bridge

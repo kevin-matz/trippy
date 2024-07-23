@@ -1,0 +1,800 @@
+openapi: 3.0.1
+info:
+  title: Express API with Swagger
+  version: 0.1.0
+  description: This is a simple REST API application made with Express and documented with Swagger
+
+paths:
+  /api/users:
+    get:
+      summary: Online check
+      tags:
+        - Users API
+      responses:
+        200:
+          description: API is online
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Online'
+
+  /api/users/register:
+    post:
+      summary: Allows users to create an account
+      tags: 
+        - Users API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: Schwammi12
+                password:
+                  type: string
+                  example: password123
+                birthdate:
+                  type: string
+                  format: date
+                  example: 2000-10-01
+                email:
+                  type: string
+                  example: max.mustermann@test.de
+              required:
+                - username
+                - password
+                - birthdate
+                - email
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadInput'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /api/users/login:
+    post:
+      summary: Allows a user to log in
+      tags:
+        - Users API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: Schwammi12
+                password:
+                  type: string
+                  example: password123
+              required:
+                - username
+                - password
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessNoResult'
+        400:
+          description: Bad Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadInput'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /api/users/change:
+    put:
+      summary: Allows a user to change his username, password and/or email
+      tags:
+        - Users API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: Schwammi12
+                password:
+                  type: string
+                  example: password123
+                email:
+                  type: string
+                  example: max.mustermann@test.de
+              description: |
+                Additional notes:
+                - At least one of either username, password or email is required
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /api/users/delete:
+    delete:
+      summary: Allows a user to delete his account
+      tags:
+        - Users API
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessNoResult'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /api/users/logout:
+    get:
+      summary: Allows a user to log out of his account and close the session
+      tags:
+        - Users API
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessNoResult'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  
+  /api/users/status:
+    get:
+      summary: Returns the login status of the requesting client
+      tags:
+        - Users API
+      responses:
+        200:
+          description: Login Status
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        type: integer
+                        example: 200
+                      data:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: Success
+                          result:
+                            type: object
+                            properties:
+                              username:
+                                type: string
+                              email:
+                                type: string
+                              registeredAt:
+                                type: string
+                                format: date-time
+                              passwordChangedAt:
+                                type: string
+                                format: date-time
+                              birthdate:
+                                type: string
+                                format: date-time
+                  - type: object
+                    properties:
+                      status:
+                        type: integer
+                        example: 200
+                      data:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: Success
+                
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+
+
+  /api/reviews:
+    get:
+      summary: Online check
+      tags:
+        - Reviews API
+      responses:
+        200:
+          description: API is online
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Online'
+
+  /api/reviews/get/all:
+    get:
+      summary: Returns all reviews of the currently logged in user
+      tags:
+        - Reviews API
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /api/reviews/get/dest/{destination}:
+    get:
+      summary: Returns all reviews for a given destination
+      tags:
+        - Reviews API
+      parameters:
+        - in: path
+          name: destination
+          description: Travelling destination
+          required: true
+          schema:
+            type: string
+            example: "New York"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /api/reviews/:
+    post:
+      summary: Allows a user to create a new review
+      tags:
+        - Reviews API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                destination:
+                  type: string
+                  example: New York
+                text:
+                  type: string
+                  example: Great trip! Very expensive though.
+                rating:
+                  type: number
+                  format: float
+                  minimum: 0.5
+                  maximum: 5
+                  example: 4.5
+              required:
+                - destination
+                - text
+                - rating
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadInput'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /api/reviews/{id}:
+    put:
+      summary: Allows a user to update an existing review's text and/or rating
+      tags:
+        - Reviews API
+      parameters:
+        - in: path
+          name: id
+          description: Review ID
+          required: true
+          schema:
+            type: string
+            example: "420ccbeda1337ecd69aacefa"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  example: Great trip! Very expensive though.
+                rating:
+                  type: number
+                  format: float
+                  minimum: 0.5
+                  maximum: 5
+                  example: 4.5
+              description: |
+                Additional notes:
+                - At least one of either text or rating is required
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadInput'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+                
+    delete:
+      summary: Allows a user to delete an existing review
+      tags:
+        - Reviews API
+      parameters:
+        - in: path
+          name: id
+          description: Review ID
+          required: true
+          schema:
+            type: string
+            example: "420ccbeda1337ecd69aacefa"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadInput'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+
+
+  /api/statistics:
+    get:
+      summary: Online check
+      tags:
+        - Statistics API
+      responses:
+        200:
+          description: API is online
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Online'
+
+  /api/statistics/usercount:
+    get:
+      summary: Returns the count of currently registered users
+      tags:
+        - Statistics API
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Success
+                      result:
+                        type: integer
+                        example: 50
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /api/statistics/reviewcount:
+    get:
+      summary: Returns the count of submitted reviews
+      tags:
+        - Statistics API
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Success
+                      result:
+                        type: integer
+                        example: 50
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /api/statistics/mostreviewedplace:
+    get:
+      summary: Returns the destination with the most reviews along with it's review count
+      tags:
+        - Statistics API
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Success
+                      result:
+                        type: object
+                        properties:
+                          count:
+                            type: integer
+                            example: 50
+                          destination:
+                            type: string
+                            example: "New York"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /api/statistics/bestratedplace:
+    get:
+      summary: Returns the destination with the best average rating along with it's average rating
+      tags:
+        - Statistics API
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Success
+                      result:
+                        type: object
+                        properties:
+                          average_rating:
+                            type: number
+                            format: float
+                            example: 4.5
+                          destination:
+                            type: string
+                            example: "New York"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /api/statistics/averagerating:
+    get:
+      summary: Returns the average rating out of all reviews submitted
+      tags:
+        - Statistics API
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Success
+                      result:
+                        type: number
+                        format: float
+                        example: 3.2
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+components:
+  schemas:
+    AnyValue: {}
+
+    Success:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Success
+            result:
+              $ref: '#/components/schemas/AnyValue'     
+
+    SuccessNoResult:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Success
+    
+    BadInput:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 400
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Bad input
+            result:
+              $ref: '#/components/schemas/AnyValue'
+
+    Unauthorized:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 401
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: You are currently not logged in
+            result:
+              $ref: '#/components/schemas/AnyValue'
+
+    Forbidden:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 403
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: You are not allowed to do that
+            result:
+              $ref: '#/components/schemas/AnyValue'
+
+    InternalServerError:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 500
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Internal server error
+            result:
+              $ref: '#/components/schemas/AnyValue'
+
+    Online:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Success
+            result:
+              type: string
+              example: "API online. Visit /api-docs for endpoint documentation."
